@@ -28,9 +28,10 @@
 | Whole string breaks after a translation tool round-trip | legacy embeddings (`RLE`, `PDF`, `RLO`) | use LRM/RLM or isolates |
 
 ```
-$ swift run -- quiet # or use the API
+import BidiLab
+
 BidiLab.explanation(for: "iPhone الجديد")
-// ["2 run(s) — ltr: 7, rtl: 5",
+// ["2 run(s) — ltr: 7, rtl: 4",
 //  "ltr [0..<7]: iPhone ",
 //  "rtl [7..<11]: جديد",
 //  "line starts with Latin text but contains Arabic; the paragraph direction
