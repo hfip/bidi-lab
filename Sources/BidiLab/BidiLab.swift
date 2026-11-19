@@ -173,7 +173,7 @@ public enum BidiLab {
 
         for character in text {
             if let scalar = character.unicodeScalars.first, isControl(scalar) {
-                let code = String(formatCodePoint: scalar.value)
+                let code = codePointLabel(scalar.value)
                 if isLegacyEmbedding(scalar) {
                     found.append(
                         BidiIssue(
@@ -282,10 +282,8 @@ public enum BidiLab {
     }
 }
 
-private extension String {
-    init(formatCodePoint value: UInt32) {
-        let hex = String(value, radix: 16, uppercase: true)
-        let padded = String(repeating: "0", count: max(0, 4 - hex.count)) + hex
-        self = "U+\(padded)"
-    }
+private func codePointLabel(_ value: UInt32) -> String {
+    let hex = String(value, radix: 16, uppercase: true)
+    let padded = String(repeating: "0", count: max(0, 4 - hex.count)) + hex
+    return "U+\(padded)"
 }
