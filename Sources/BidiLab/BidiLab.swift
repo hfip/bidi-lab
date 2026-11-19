@@ -110,8 +110,8 @@ public enum BidiLab {
     public static func direction(of character: Character) -> BidiDirection {
         guard let scalar = character.unicodeScalars.first else { return .neutral }
         if isControl(scalar) { return .neutral }
-        if isArabic(scalar) || isHebrew(scalar) { return .rtl }
         if isDigit(scalar) { return .number }
+        if isArabic(scalar) || isHebrew(scalar) { return .rtl }
         if character.isLetter { return .ltr }
         return .neutral
     }
