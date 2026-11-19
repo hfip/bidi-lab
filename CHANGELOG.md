@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - `firstStrongDirection` did not treat RLM/LRM as strong direction hints, so a line that
   had already been fixed with an RLM still reported `latinInitial`.
 - Added regression tests: the output of `addingRTLMarks(to:)` must be issue-free.
-- 29 tests.
+- 28 tests.
 
 ## [0.1.0] - 2026-11-19
 
