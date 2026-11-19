@@ -74,10 +74,23 @@ final class BidiLabTests: XCTestCase {
     // MARK: - Issues
 
     func testDetectsStrayRLM() {
-        let issues = BidiLab.issues(in: "\u{200F}مرحبا")
+        let issues = BidiLab.issues(in: "مرحبا\u{200F}")
         XCTAssertEqual(issues.count, 1)
         XCTAssertEqual(issues[0].kind, .strayControl)
-        XCTAssertEqual(issues[0].range, 0..<1)
+        XCTAssertEqual(issues[0].range, 5..<6)
+    }
+
+    func testLeadingRLMIsIntentional() {
+        XCTAssertTrue(BidiLab.issues(in: "\u{200F}iPhone جديد").isEmpty)
+    }
+
+    func testLeadingIndentationBeforeRLMIsAllowed() {
+        XCTAssertTrue(BidiLab.issues(in: "   \u{200F}iPhone جديد").isEmpty)
+    }
+
+    func testTheSuggestedFixClearsTheDiagnostics() {
+        let fixed = BidiLab.addingRTLMarks(to: "iPhone جديد")
+        XCTAssertTrue(BidiLab.issues(in: fixed).isEmpty)
     }
 
     func testDetectsLegacyEmbeddings() {

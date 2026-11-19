@@ -98,6 +98,14 @@ public enum BidiLab {
         }
     }
 
+    public static func isRLM(_ scalar: Unicode.Scalar) -> Bool {
+        scalar.value == 0x200F
+    }
+
+    public static func isLRM(_ scalar: Unicode.Scalar) -> Bool {
+        scalar.value == 0x200E
+    }
+
     public static func isLegacyEmbedding(_ scalar: Unicode.Scalar) -> Bool {
         switch scalar.value {
         case 0x202A...0x202E, 0x2066...0x2069:
@@ -170,9 +178,27 @@ public enum BidiLab {
     public static func issues(in text: String) -> [BidiIssue] {
         var found: [BidiIssue] = []
         var offset = 0
+        var atLineStart = true
 
         for character in text {
+            if character == "\n" {
+                atLineStart = true
+                offset += 1
+                continue
+            }
+            if atLineStart && (character == " " || character == "\t") {
+                offset += 1
+                continue
+            }
+
             if let scalar = character.unicodeScalars.first, isControl(scalar) {
+                // A leading RLM is the fix this package recommends, not a bug.
+                if isRLM(scalar) && atLineStart {
+                    atLineStart = false
+                    offset += 1
+                    continue
+                }
+
                 let code = codePointLabel(scalar.value)
                 if isLegacyEmbedding(scalar) {
                     found.append(
@@ -194,6 +220,7 @@ public enum BidiLab {
                     )
                 }
             }
+            atLineStart = false
             offset += 1
         }
 
@@ -222,6 +249,11 @@ public enum BidiLab {
 
     private static func firstStrongDirection(in characters: [Character]) -> BidiDirection? {
         for character in characters {
+            if let scalar = character.unicodeScalars.first {
+                // A paragraph mark is a strong hint about the intended direction.
+                if isRLM(scalar) { return .rtl }
+                if isLRM(scalar) { return .ltr }
+            }
             let direction = direction(of: character)
             if direction == .ltr || direction == .rtl {
                 return direction

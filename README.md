@@ -84,6 +84,11 @@ struct DebugView: View {
 The view lives behind `#if canImport(SwiftUI)`, so the package still builds in Linux CI
 and in server-side Swift targets.
 
+Leading paragraph marks
+
+A single RLM at the start of a line (after indentation) is treated as intentional, so the
+output of `addingRTLMarks(to:)` never reports its own fix.
+
 ## What it is not
 
 This is **not** a full implementation of the Unicode Bidirectional Algorithm. It does not
