@@ -101,6 +101,8 @@ checks constraints and alignments in your Swift sources before any of this reach
 
 </div>
 
+Part of the [Arabic dev tools](https://github.com/hfip/arabic-dev-tools) collection.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
